@@ -48,7 +48,7 @@ label dmr_def_pEL_test:
     # 隐藏约会场景
     hide 9nine_ev103d with Fade(0.5,2,0.5,color="#000000")
     # 必要代码
-    $ bg_change_info_moi = mas_changeBackground(mas_background_def, set_persistent=False)    call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
+    $ bg_change_info_moi = mas_changeBackground(mas_background_def, set_persistent=False)
     call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
 label dmr_EndLabel_test:
     "这里是EndLabel"
