@@ -12,7 +12,7 @@ init -999 python:
         def __str__(self):
             return (self.value)
 
-init -990 python:
+init -5 python:
     # 声明本次约会的变量
     # 变量名字可以改变
     DateInfo = {
@@ -26,7 +26,7 @@ init -990 python:
         # 不要包含call/jump语句
         'pre_StartLabel':'dmr_def_pSL',
         # 约会开始label
-        # 在这里随意跳转label
+        # 在这里随意跳转label 但不要用Jump
         'StartLabel':'dmr_start_label',
         # 约会结束之前label
         # 类似于pre_StartLabel
@@ -45,6 +45,7 @@ init -990 python:
     # info为你声明约会使用的变量
     #dmr_DateList.append(DateInfo)
 
+init -990 python:
     def dmr_randomDate():
         """
         随机返回一个约会
@@ -54,8 +55,16 @@ init -990 python:
         if DateList.length == 0:
             return None
         else:
-            a = renpy.random.choice(DateList)
-            return a['Id']
+            enbDList=list()
+            for date in dmr_DateList:
+                if date['Conditional'] == True:
+                    enbDList.append(date)
+            if envDList.length > 0:        
+                a = renpy.random.choice(enbDList)
+                res = a['Id']
+            else:
+                res = None
+            return res
 
     def dmr_initData():
         """
