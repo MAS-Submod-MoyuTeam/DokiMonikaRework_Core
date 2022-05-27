@@ -1,0 +1,33 @@
+    # 声明本次约会的变量
+    # 变量名字可以改变
+    DateInfo = {
+        # 约会事件id 唯一
+        'Id':'id',
+        # 名称
+        'Name':'NormalName',
+        # 推送条件 python表达式
+        # 如果不知道填什么 就留True
+        'Conditional':True,
+        # 约会开始之前的label - 从默认房间跳转到约会场景
+        # 不要包含call/jump语句
+        'pre_StartLabel':'dmr_def_pSL',
+        # 约会开始label
+        # 在这里随意跳转label 但不要用Jump
+        'StartLabel':'dmr_start_label',
+        # 约会结束之前label
+        # 类似于pre_StartLabel
+        # 不要包含call/jump语句
+        'pre_EndLabel':'dmr_def_pEL',
+        # 约会结束label
+        # 回到太空教室后的对话
+        'EndLabel':'dmr_EndLabel'
+    }
+
+    # 保存在存档中的约会记录
+    DateData = {
+        'Id':'id',
+        'Count':0,
+        'FirstTime':0
+    }
+    # info为你声明约会使用的变量
+    #dmr_DateList.append(DateInfo)

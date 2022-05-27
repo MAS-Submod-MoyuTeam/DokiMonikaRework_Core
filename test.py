@@ -13,6 +13,5 @@ c = {
 a.append(b)
 a.append(c)
 
-for data in a:
-    if
-    print(data)
+print(bool(None))
+    

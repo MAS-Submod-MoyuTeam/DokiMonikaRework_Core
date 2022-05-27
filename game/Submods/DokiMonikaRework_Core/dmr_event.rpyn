@@ -1,0 +1,62 @@
+init 5 python:
+    addEvent(
+        Event(
+            persistent.event_database,
+            eventlabel="moi_go_to_date",
+            category=["浪漫"],
+            prompt="我想和你去约会!",
+            conditional=(renpy.seen_label('moi_a_you_rd_togo') and len(dmr_DateList)>0),
+            action=EV_ACT_UNLOCK,
+            aff_range=(mas_aff.ENAMORED,None),
+            pool=True,
+            random=True
+        )
+    )
+#在"要去约会吗?"之后,由玩家自己发起约会.
+label moi_go_to_date:
+    m 1hubla "我等不及了!我们今天去哪?"
+    python:
+        noselected = False
+        dates = dmr_unreadDateList()
+        if len(dates) > 0:
+            gotolabel = renpy.random.choice(dates)
+            dmr_loadDateInfo(gotolabel[0])
+        else:
+            dates = dmr_enableDateList()
+            noselected = True
+    if noselected:
+        call screen dmr_datelist_menu(dates)
+        $ dmr_loadDateInfo(_return)
+    m 7eud "啊...我还没换衣服呢,{w=0.25}等我一下!"
+    #hide monika with dissolve
+    call mas_transition_to_emptydesk
+    menu:
+        "等一下!":
+            m "怎么了?"
+            menu:
+                "没事了.":
+                    pass
+                "我现在有点事情...":
+                    m "啊...好吧..."
+                    m "那我们下次再出去吧."
+                    call mas_transition_from_emptydesk
+                    return
+                
+        "...{w=5}":
+            pass
+    python:
+        if dmr_AOCenable:
+            date_exprop = moi_getClothesExpropForTemperature(indoor=False)
+            store.ahc_utils.changeHairAndClothes(
+                _day_cycle="day",
+                _hair_random_chance=1,
+                _clothes_random_chance=1,
+                _exprop=date_exprop
+            )     
+    with Pause(5)   
+    call mas_transition_from_emptydesk
+    m 7kublu "我们走吧!"
+
+    #跳至约会label
+    call dmr_datemain
+    return

@@ -12,55 +12,70 @@ init -999 python:
         def __str__(self):
             return (self.value)
 
+init 900 python:
+    dmr_initData()
 init -5 python:
-    # 声明本次约会的变量
-    # 变量名字可以改变
-    DateInfo = {
-        # 约会事件id 唯一
-        'Id':'id',
-        # 名称
-        'Name':'NormalName',
-        # 推送条件 python表达式
-        'Conditional':'python code here',
-        # 约会开始之前的label(从默认房间跳转到约会场景)
-        # 不要包含call/jump语句
-        'pre_StartLabel':'dmr_def_pSL',
-        # 约会开始label
-        # 在这里随意跳转label 但不要用Jump
-        'StartLabel':'dmr_start_label',
-        # 约会结束之前label
-        # 类似于pre_StartLabel
-        # 不要包含call/jump语句
-        'pre_EndLabel':'dmr_def_pEL',
-        # 约会结束label
-        # 回到太空教室后的对话
-        'EndLabel':'dmr_EndLabel'
-    }
-
-    # 保存在存档中的约会记录
-    DateData = {
-        'Id':'id',
-        'Count':0,
-        'FirstTime':0
-    }
-    # info为你声明约会使用的变量
-    #dmr_DateList.append(DateInfo)
+    pass
 
 init -990 python:
+    def dmr_enableDateList():
+        """
+        返回所有可用的约会, 如果Conditional不为T则不会添加
+        return:
+            所有可用的约会list
+            list每个元素的格式为<约会id>, <约会名称>
+        """
+        enbDList = list()
+        for date in dmr_DateList:
+            if date['Conditional']:
+                infodate = [date['Id'], date['Name']]
+                enbDList.append(infodate)
+        return enbDList
+
+    def dmr_unreadDateList():
+        """
+        返回未阅读过的约会, 且目前可用
+        return:
+            未阅读过的约会list
+            list每个元素的格式为<约会id>, <约会名称>
+        """
+        noReadList = list()
+        enbDList = dmr_enableDateList()
+        for date in enbDList:
+            readtime = dmr_getDateDataKey(id = date[0], key = 'Count')
+            if readtime == 0:
+                noReadList.append(date)
+        return noReadList
+
+    def dmr_readedDateList():
+        """
+        返回已阅读过的约会, 且目前可用
+        return:
+            已阅读过的约会list
+            list每个元素的格式为<约会id>, <约会名称>
+        """
+        noReadList = list()
+        enbDList = dmr_enableDateList()
+        for date in enbDList:
+            readtime = dmr_getDateDataKey(id = date[0], key = 'Count')
+            if readtime > 0:
+                noReadList.append(date)
+        return noReadList
+
     def dmr_randomDate():
         """
         随机返回一个约会
         return:
             约会ID
         """
-        if DateList.length == 0:
+        if len(DateList) == 0:
             return None
         else:
             enbDList=list()
             for date in dmr_DateList:
                 if date['Conditional'] == True:
                     enbDList.append(date)
-            if envDList.length > 0:        
+            if len(envDList) > 0:        
                 a = renpy.random.choice(enbDList)
                 res = a['Id']
             else:
@@ -85,44 +100,74 @@ init -990 python:
         var:
             id - 约会id
         """
-        DateData = {
+        iDateData = {
         'Id':id,
         'Count':0,
         'FirstTime':0
         }
-        dmr_DateData.append(data)
+        dmr_DateData.append(iDateData)
 
-    def dmr_setDefData(id):
+    def dmr_getDateDataKey(id, key):
+        """
+        获取保存在数据中的某个特定键值
+        var:
+            id - 约会id
+            key - 要查找的键
+        return:
+            正常运行 - 返回对应的Key值
+            未找到 - 返回None
+        exception:
+            未找到约会数据id时返回异常
+        """
+        result = None
+        for data in dmr_DateData:
+            if data['Id'] == id:
+                try:
+                    result = data[key]
+                except:
+                    pass
+                return result
+            else:
+                continue
+        raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+
+
+    def dmr_setDefData(id=dmr_global.Id):
         """
         更新初始的约会数据, 即Count和FirstTime
         var:
-            id - 约会id
+            id - 约会id, 为空则为当前加载的约会id
         exception:
             当id未在约会数据中找到时, 引发异常
         """
+        import time
         for data in dmr_DateData:
             if data['Id'] == id:
                 data['Count'] = data['Count'] + 1
                 if data['FirstTime'] == 0:
-                    data['FirstTime'] == time.time()
+                    data['FirstTime'] = time.time()
+                return True
             else:
-                raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+                continue
+        raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
 
-    def dmr_setDateData(id, key, value = None):
+    def dmr_setDateData(id, ikey, value = None):
         """
         在约会数据中创建/更新特定的关键信息
         var:
-            id - 约会id
+            id - 约会id, 为空则为当前加载的id
             key - 创建的键
-            value - 创建的键值 不填则为None
+            value - key 对应的键值
         exception:
             当id未在约会数据中找到时, 引发异常
         """
         for data in dmr_DateData:
             if data['Id'] == id:
-                data['key'] = value
+                data[ikey] = value
+                return True
             else:
-                raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+                continue
+        raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
     
     def dmr_saveDateData():
         """
