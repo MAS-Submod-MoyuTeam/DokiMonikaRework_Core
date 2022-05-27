@@ -40,7 +40,8 @@ init -990 python:
     # 保存在存档中的约会记录
     DateData = {
         'Id':'id',
-        'Count':0
+        'Count':0,
+        'FirstTime':0
     }
     # info为你声明约会使用的变量
     #dmr_DateList.append(DateInfo)
@@ -75,15 +76,32 @@ init -990 python:
         var:
             id - 约会id
         """
-        data = {
+        DateData = {
         'Id':id,
-        'Count':0
+        'Count':0,
+        'FirstTime':0
         }
         dmr_DateData.append(data)
 
+    def dmr_setDefData(id):
+        """
+        更新初始的约会数据, 即Count和FirstTime
+        var:
+            id - 约会id
+        exception:
+            当id未在约会数据中找到时, 引发异常
+        """
+        for data in dmr_DateData:
+            if data['Id'] == id:
+                data['Count'] = data['Count'] + 1
+                if data['FirstTime'] == 0:
+                    data['FirstTime'] == time.time()
+            else:
+                raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+
     def dmr_setDateData(id, key, value = None):
         """
-        在约会数据中创建特定的关键信息
+        在约会数据中创建/更新特定的关键信息
         var:
             id - 约会id
             key - 创建的键
