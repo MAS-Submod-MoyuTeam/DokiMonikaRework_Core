@@ -28,6 +28,14 @@ init -5 python:
         raise DateSubmodException('Find Id Fail - 查找约会ID失败')
 
 screen dmr_datelist_menu(items, display_area = (835, 40, 440, 528), scroll_align = -0.05, nvm_quit = "算了"):
+    #"""
+    #展示约会列表
+    #var:
+    #    items - 约会list (id, name)
+    #return:
+    #    约会id
+    #    当点击'算了'返回-1
+    #"""
     style_prefix "scrollable_menu"
 
     fixed:

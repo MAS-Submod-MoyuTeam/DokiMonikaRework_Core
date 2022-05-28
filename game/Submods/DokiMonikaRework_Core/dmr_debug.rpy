@@ -32,18 +32,7 @@ init 5 python:
                     unlocked=True
                 )
             )   
-        addEvent(
-                Event(
-                    persistent.event_database,          
-                    eventlabel="debug_moi_go_to_date",        
-                    pool=True,
-                    unlocked=True
-                )
-            )   
 
-label debug_moi_go_to_date:
-    call moi_go_to_date
-    return
 
 label dmr_testDateTopic:
     $ dmr_loadDateInfo('dmr_testDoki')

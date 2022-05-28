@@ -18,6 +18,28 @@ init -5 python:
     pass
 
 init -990 python:
+    def dmr_resetDateData():
+        """
+        重置所有约会数据
+        """
+        dmr_DateData = list():
+        dmr_initData()
+
+    def dmr_delDateData(id):
+        """
+        删除单个ID的数据
+        var:
+            id - 约会id
+        exception:
+            在未找到约会ID时
+        """
+        for data in dmr_DateData:
+            if data['Id'] == id:
+                dmr_DateData.remove(data)
+                dmr_createData(id)
+                return True 
+        raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+
     def dmr_enableDateList():
         """
         返回所有可用的约会, 如果Conditional不为T则不会添加

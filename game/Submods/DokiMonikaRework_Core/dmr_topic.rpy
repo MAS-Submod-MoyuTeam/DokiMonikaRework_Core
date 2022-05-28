@@ -11,5 +11,5 @@ label dmr_datemain:
         renpy.call(dmr_global.pre_EndLabel)
         renpy.call(dmr_global.EndLabel)
         dmr_saveDateData()
-        play_song(persistent.current_track, fadein = 1, fadeout = 1)
+        play_song(persistent.current_track, fadein = 1.3, fadeout = 1.3)
 
