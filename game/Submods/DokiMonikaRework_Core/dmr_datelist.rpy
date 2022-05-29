@@ -31,10 +31,10 @@ init 950 python:
         
         for data in dmr_DateData:
             if data['Id'] == id:
-                data['GetAff'] += aff
                 if data['GetAff'] > DMR_MAX_AFF:
                     mas_submod_utils.submod_log.info('{} a increased {} aff, but reached the maximum value'.format(id, aff))
                 else:
+                    data['GetAff'] += aff
                     mas_gainAffection(aff, bypass = True)
                     mas_submod_utils.submod_log.info('{} a increased {} aff'.format(id, aff))
                 return True
