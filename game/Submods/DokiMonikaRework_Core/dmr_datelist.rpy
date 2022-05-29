@@ -35,7 +35,7 @@ init 950 python:
                 if data['GetAff'] > DMR_MAX_AFF:
                     mas_submod_utils.submod_log.info('{} a increased {} aff, but reached the maximum value'.format(id, aff))
                 else:
-                    mas_gainAffact(aff, bypass=True)
+                    mas_gainAffection(aff, bypass = True)
                     mas_submod_utils.submod_log.info('{} a increased {} aff'.format(id, aff))
                 return True
             else:
