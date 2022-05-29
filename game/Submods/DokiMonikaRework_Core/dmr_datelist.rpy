@@ -1,3 +1,5 @@
+define DMR_MAX_AFF = 120
+
 init -999 python:
     dmr_DateList = list()
     if persistent.DateData == None:
@@ -26,10 +28,15 @@ init 950 python:
         """
         if aff > 10:
             aff = 10
-        mas_gainAffection(aff, bypass = True)
+        
         for data in dmr_DateData:
             if data['Id'] == id:
                 data['GetAff'] += aff
+                if data['GetAff'] > DMR_MAX_AFF:
+                    mas_submod_utils.submod_log.info('{} a increased {} aff, but reached the maximum value'.format(id, aff))
+                else:
+                    mas_gainAffact(aff, bypass=True)
+                    mas_submod_utils.submod_log.info('{} a increased {} aff'.format(id, aff))
                 return True
             else:
                 continue
