@@ -10,6 +10,7 @@ init 5 python:
             },
             aff_range(mas_aff.ENAMORED,None)
         )
+        restartBlacklist=True
     )
     addEvent(
         Event(
@@ -22,6 +23,7 @@ init 5 python:
             },
             aff_range(mas_aff.ENAMORED,None)
         )
+        restartBlacklist=True
     )
 
     addEvent(
@@ -35,6 +37,7 @@ init 5 python:
             },
             aff_range(mas_aff.ENAMORED,None)
         )
+        restartBlacklist=True
     )
     addEvent(
         Event(
@@ -49,6 +52,7 @@ init 5 python:
             },
             aff_range(mas_aff.ENAMORED,None)
         )
+        restartBlacklist=True
     )
 label dmr_closeToEnable:
     m 1eua "你还记着我之前跟你说过我的世界有些变化吗?"
