@@ -17,7 +17,91 @@ init -999 python:
 
 init 900 python:
     dmr_initData()
+
+init -2 python in mas_sprites:
+    import store
+
+    def _outfit_wear_if_gifted(_moni_chr, outfit_name, by_user=False, outfit_mode=False):
+        """
+        Wears the outfit if it exists and has been gifted/reacted.
+        It has been gifted/reacted if the selectable is unlocked.
+        IN:
+            _moni_chr - MASMonika object
+            outfit_name - name of the outfit
+            by_user - True if this action was mandated by user, False if not.
+                (Default: False)
+            outfit_mode - True means we should change hair/acs if it
+                completes the outfit. False means we should not.
+                (Default: False)
+        """
+        outfit_to_wear = store.mas_sprites.get_sprite(
+            store.mas_sprites.SP_CLOTHES,
+            outfit_name
+        )
+        if outfit_to_wear is not None and store.mas_SELisUnlocked(outfit_to_wear):
+            _moni_chr.change_clothes(outfit_to_wear, by_user=by_user, outfit_mode=outfit_mode)
+
+init 995 python:
+    def dmr_setAcs(id):
+        """
+        穿戴指定id的ACS饰品(发饰, 呆毛, 水杯等)
+        无视是否解锁
+        IN:
+            id - 饰品字符串Id(名称)
+        """
+        store.mas_sprites._acs_wear_if_found(store.moni_chr, id)
+    
+    def dmr_setOutfit(id):
+        """
+        穿戴指定名称的衣服, 必须要赠送过
+        IN:
+            id - 衣服名称
+        """
+        store.mas_sprites._outfit_wear_if_gifted(store.moni_chr, id)
+
+    def dmr_wearClothesAndHairwithAOC(_group="date", _hairgroup="day"):
+        """
+        使用AOC切换衣服/发饰, 未安装时会在submod_log留下ERROR
+        注意 AOC切换为随机切换 有极低概率不切换
+        执行失败返回False, 否则返回True
+        IN:
+            group - 衣服的种类 默认为date
+            _hairgroup - 头发类型 默认为day
+        RETURN:
+            执行结果T/F
+        """
+        if mas_submod_utils.isSubmodInstalled('Auto Outfit Change'):
+            store.ahc_utils.changeHairAndClothes(
+                    _day_cycle=_hairgroup,
+                    _hair_random_chance=10,
+                    _clothes_random_chance=10,
+                    _exprop=_group
+                )
+            return True
+        else:
+            mas_submod_utils.submod_log.info("[DMR_C] Not installed submod 'Auto Outfit Change', change clothes/hair fail")
+            return False
+
+    def dmr_wearClotheswithAOC(_group="date"):
+        """
+        使用AOC切换衣服, 未安装时会在submod_log留下ERROR
+        注意 AOC切换为随机切换 必定切换
+        执行失败返回False, 否则返回True
+        IN:
+            _group - 衣服的种类 默认为date
+            
+        RETURN:
+            执行结果T/F
+        """
+        if mas_submod_utils.isSubmodInstalled('Auto Outfit Change'):
+            store.ahc_utils.changeClothesOfExprop(_group, chance=False)
+            return True
+        else:
+            mas_submod_utils.submod_log.info("[DMR_C] Not installed submod 'Auto Outfit Change', change clothes fail")
+            return False
+
 init -5 python:
+
     def dmr_gainAff(aff = 3, id = store.dmr_global.Id):
         """
         增加好感, 上限为10, 累计上限为120
