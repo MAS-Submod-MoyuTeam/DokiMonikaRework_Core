@@ -22,9 +22,10 @@ init -5 python:
 init 950 python:
     def dmr_getAff(aff = None, id = dmr_global.Id):
         """
-        增加好感, 上限为10
+        增加好感, 上限为10, 累计上限为120
         var:
             aff - 好感值
+            id - 约会Id, 默认为已加载的Id
         """
         if aff > 10:
             aff = 10
