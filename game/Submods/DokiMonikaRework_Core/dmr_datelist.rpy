@@ -17,7 +17,18 @@ init 900 python:
 init -5 python:
     pass
 
+init 950 python:
+    def dmr_getAff(aff = None, id = dmr_global.Id):
+        """
+        增加好感, 上限为10
+        var:
+            aff - 好感值
+        """
+        if aff > 10:
+            aff = 10
+        mas_gainAffection(aff, bypass = True)
 init -990 python:
+
     def dmr_resetDateData():
         """
         重置所有约会数据
@@ -125,7 +136,8 @@ init -990 python:
         iDateData = {
         'Id':id,
         'Count':0,
-        'FirstTime':0
+        'FirstTime':0,
+        'GetAff':0
         }
         dmr_DateData.append(iDateData)
 
@@ -180,9 +192,16 @@ init -990 python:
             id - 约会id, 为空则为当前加载的id
             key - 创建的键
             value - key 对应的键值
+        return:
+            True - 修改成功
+            False - 修改项不允许修改
         exception:
             当id未在约会数据中找到时, 引发异常
         """
+        ignore = ['Id', 'Count', 'FirstTime', 'GetAff']
+        for noeditkey in ignore:
+            if ikey == noeditkey:
+                return False
         for data in dmr_DateData:
             if data['Id'] == id:
                 data[ikey] = value
