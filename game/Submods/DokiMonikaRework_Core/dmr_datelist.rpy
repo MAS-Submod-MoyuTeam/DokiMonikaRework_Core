@@ -27,6 +27,14 @@ init 950 python:
         if aff > 10:
             aff = 10
         mas_gainAffection(aff, bypass = True)
+        for data in dmr_DateData:
+            if data['Id'] == id:
+                data['GetAff'] += aff
+                return True
+            else:
+                continue
+        raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+        
 init -990 python:
 
     def dmr_resetDateData():
