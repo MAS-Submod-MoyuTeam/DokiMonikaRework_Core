@@ -8,6 +8,18 @@ init -995 python in dmr_global:
     EndLabel = ""
 
 init -5 python:
+    def dmr_unloadDateInfo():
+        """
+        卸载当前约会
+        """
+        dmr_global.Id = a['Id']
+        dmr_global.Name = a['Name']
+        dmr_global.pre_StartLabel = a['pre_StartLabel']
+        dmr_global.StartLabel = a['StartLabel']
+        dmr_global.pre_EndLabel = a['pre_EndLabel']
+        dmr_global.EndLabel = a['EndLabel']
+        return True
+        
     def dmr_loadDateInfo(Id):
         """
         加载指定的约会信息
