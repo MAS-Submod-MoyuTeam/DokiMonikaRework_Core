@@ -1,4 +1,5 @@
 define DMR_MAX_AFF = 120
+define DMR_MIN_AFF = -120
 
 init -999 python:
     dmr_DateList = list()
@@ -19,12 +20,11 @@ init 900 python:
 init -5 python:
     pass
 
-init 950 python:
-    def dmr_getAff(aff = None, id = dmr_global.Id):
+    def dmr_gainAff(aff = 3, id = dmr_global.Id):
         """
         增加好感, 上限为10, 累计上限为120
         var:
-            aff - 好感值
+            aff - 好感值 默认为3
             id - 约会Id, 默认为已加载的Id
         """
         if aff > 10:
@@ -43,11 +43,11 @@ init 950 python:
                 continue
         raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
         
-    def dmr_loseAff(aff = None, id = dmr_global.Id):
+    def dmr_loseAff(aff = 3, id = dmr_global.Id):
         """
-        降低好感
+        降低好感, 上限为-10, 累计上限为-120
         var:
-            aff - 好感值 最大值为-10, 无累计上限
+            aff - 好感值 默认为3
             id - 约会Id, 默认为已加载的Id
         """
         if aff > 10:
@@ -55,8 +55,11 @@ init 950 python:
         
         for data in dmr_DateData:
             if data['Id'] == id:
+                if data['GetAff'] < DMR_MIN_AFF:
+                    mas_submod_utils.submod_log.info('[DMR_C] {} decreased {} aff, but reached the minimum value'.format(id, aff))
+                else:
                     data['GetAff'] -= aff
-                    mas_gainAffection(aff, bypass = True)
+                    mas_loseAffection(aff)
                     mas_submod_utils.submod_log.info('[DMR_C] {} decreased {} aff'.format(id, aff))
                 return True
             else:
