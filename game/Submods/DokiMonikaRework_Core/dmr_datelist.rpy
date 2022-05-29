@@ -43,6 +43,26 @@ init 950 python:
                 continue
         raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
         
+    def dmr_loseAff(aff = None, id = dmr_global.Id):
+        """
+        降低好感
+        var:
+            aff - 好感值 最大值为-10, 无累计上限
+            id - 约会Id, 默认为已加载的Id
+        """
+        if aff > 10:
+            aff = 10
+        
+        for data in dmr_DateData:
+            if data['Id'] == id:
+                    data['GetAff'] -= aff
+                    mas_gainAffection(aff, bypass = True)
+                    mas_submod_utils.submod_log.info('[DMR_C] {} decreased {} aff'.format(id, aff))
+                return True
+            else:
+                continue
+        raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
+        
 init -990 python:
 
     def dmr_resetDateData():
