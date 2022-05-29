@@ -18,9 +18,7 @@ init -999 python:
 init 900 python:
     dmr_initData()
 init -5 python:
-    pass
-
-    def dmr_gainAff(aff = 3, id = dmr_global.Id):
+    def dmr_gainAff(aff = 3, id = store.dmr_global.Id):
         """
         增加好感, 上限为10, 累计上限为120
         var:
@@ -33,17 +31,17 @@ init -5 python:
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] > DMR_MAX_AFF:
-                    mas_submod_utils.submod_log.info('[DMR_C] {} increased {} aff, but reached the maximum value'.format(id, aff))
+                    mas_submod_utils.submod_log.info("[DMR_C] '{}' increased {} aff, but reached the maximum value".format(id, aff))
                 else:
                     data['GetAff'] += aff
                     mas_gainAffection(aff, bypass = True)
-                    mas_submod_utils.submod_log.info('[DMR_C] {} increased {} aff'.format(id, aff))
+                    mas_submod_utils.submod_log.info("[DMR_C] '{}' increased {} aff".format(id, aff))
                 return True
             else:
                 continue
         raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
         
-    def dmr_loseAff(aff = 3, id = dmr_global.Id):
+    def dmr_loseAff(aff = 3, id = store.dmr_global.Id):
         """
         降低好感, 上限为-10, 累计上限为-120
         var:
@@ -56,11 +54,11 @@ init -5 python:
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] < DMR_MIN_AFF:
-                    mas_submod_utils.submod_log.info('[DMR_C] {} decreased {} aff, but reached the minimum value'.format(id, aff))
+                    mas_submod_utils.submod_log.info("[DMR_C] '{}' decreased '{}' aff, but reached the minimum value".format(id, aff))
                 else:
                     data['GetAff'] -= aff
                     mas_loseAffection(aff)
-                    mas_submod_utils.submod_log.info('[DMR_C] {} decreased {} aff'.format(id, aff))
+                    mas_submod_utils.submod_log.info("[DMR_C] '{}' decreased '{}' aff".format(id, aff))
                 return True
             else:
                 continue
@@ -72,7 +70,8 @@ init -990 python:
         """
         重置所有约会数据
         """
-        dmr_DateData = list():
+        a = list()
+        dmr_DateData = a
         dmr_initData()
 
     def dmr_delDateData(id):

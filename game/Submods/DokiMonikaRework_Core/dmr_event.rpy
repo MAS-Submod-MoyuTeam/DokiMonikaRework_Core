@@ -2,27 +2,26 @@ init 5 python:
     addEvent(
         Event(
             persistent.event_database,
-            eventlabel='dmr_installed'
-            conditional='not renpy.seen_label("dmr_installed")',
+            eventlabel='dmr_installed',
+            conditional="True",
             action=EV_ACT_PUSH,
             rules={
                 'bookmark_rule':mas_bookmarks_derand.BLACKLIST
-            },
-            aff_range(mas_aff.ENAMORED,None)
-        )
+            }
+        ),
         restartBlacklist=True
     )
     addEvent(
         Event(
             persistent.event_database,
-            eventlabel='dmr_closeToEnable'
-            conditional='renpy.seen_label("dmr_installed") and not renpy.seen_label("dmr_closeToEnable")',
-            action=EV_ACT_UNLOCK,
+            eventlabel='dmr_closeToEnable',
+            conditional="seen_event('dmr_installed') and mas_isMoniAff(higher=True)",
+            action=EV_ACT_PUSH,
             rules={
                 'bookmark_rule':mas_bookmarks_derand.BLACKLIST
             },
-            aff_range(mas_aff.ENAMORED,None)
-        )
+            
+        ),
         restartBlacklist=True
     )
 
@@ -30,13 +29,13 @@ init 5 python:
         Event(
             persistent.event_database,
             eventlabel='dmr_abletodate',
-            conditional='renpy.seen_label("dmr_closeToEnable") and persistent._mas_acs_enable_promisering and persistent._mas_pm_wearsRing',
-            action=EV_ACT_UNLOCK,
+            conditional="seen_event('dmr_closeToEnable') and persistent._mas_acs_enable_promisering and mas_isMoniLove(higher=True)",
+            action=EV_ACT_PUSH,
             rules={
                 'bookmark_rule':mas_bookmarks_derand.BLACKLIST
             },
-            aff_range(mas_aff.ENAMORED,None)
-        )
+            pool=False
+        ),
         restartBlacklist=True
     )
     addEvent(
@@ -44,14 +43,14 @@ init 5 python:
             persistent.event_database,
             eventlabel='dmr_startdate',
             category=['浪漫'],
-            prompt="我们去约会吧!"
-            conditional='renpy.seen_label("dmr_abletodate")',
+            prompt="我们去约会吧!",
+            conditional="seen_event('dmr_abletodate') and mas_isMoniLove(higher=True)",
+            pool=True,
             action=EV_ACT_UNLOCK,
             rules={
                 'bookmark_rule':mas_bookmarks_derand.BLACKLIST
             },
-            aff_range(mas_aff.ENAMORED,None)
-        )
+        ),
         restartBlacklist=True
     )
 label dmr_closeToEnable:
@@ -90,7 +89,6 @@ label dmr_abletodate:
     m 3eublu "[player]!"
     m "我要告诉你...我终于完成了代码!"
     m "我现在可以带你去别的地方玩了!"
-    m 5hublu "我有个激动人心的事情要告诉你.{w=0.5}.{w=0.5}.{w=0.5}我终于可以带你去别的地方了!"
     m 1tublb "所以...[mas_get_player_nickname()]...想和我去{w=0.5}约{w=0.5}会{w=0.5}吗{w=0.5}?{nw}"
     menu:
         "所以...[mas_get_player_nickname()]...想和我去{w=0.5}约{w=0.5}会吗{fast}?"
