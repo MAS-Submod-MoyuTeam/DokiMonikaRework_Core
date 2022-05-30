@@ -21,7 +21,7 @@ init 900 python:
 init -2 python in mas_sprites:
     import store
 
-    def _outfit_wear_if_gifted(_moni_chr, outfit_name, by_user=False, outfit_mode=False):
+    def _outfit_wear_if_found(_moni_chr, outfit_name, by_user=False, outfit_mode=False):
         """
         Wears the outfit if it exists and has been gifted/reacted.
         It has been gifted/reacted if the selectable is unlocked.
@@ -38,7 +38,7 @@ init -2 python in mas_sprites:
             store.mas_sprites.SP_CLOTHES,
             outfit_name
         )
-        if outfit_to_wear is not None and store.mas_SELisUnlocked(outfit_to_wear):
+        if outfit_to_wear is not None:
             _moni_chr.change_clothes(outfit_to_wear, by_user=by_user, outfit_mode=outfit_mode)
 
 init 995 python:
@@ -47,17 +47,17 @@ init 995 python:
         穿戴指定id的ACS饰品(发饰, 呆毛, 水杯等)
         无视是否解锁
         IN:
-            id - 饰品字符串Id(名称)
+            id - 饰品字符串NAME(名称)
         """
-        store.mas_sprites._acs_wear_if_found(store.moni_chr, id)
+        store.mas_sprites._acs_wear_if_found(store.monika_chr, id)
     
     def dmr_setOutfit(id):
         """
-        穿戴指定名称的衣服, 必须要赠送过
+        穿戴指定名称的衣服, 无视是否解锁
         IN:
-            id - 衣服名称
+            id - 衣服名称 name
         """
-        store.mas_sprites._outfit_wear_if_gifted(store.moni_chr, id)
+        store.mas_sprites._outfit_wear_if_found(store.monika_chr, id)
 
     def dmr_wearClothesAndHairwithAOC(_group="date", _hairgroup="day"):
         """
@@ -79,7 +79,7 @@ init 995 python:
                 )
             return True
         else:
-            mas_submod_utils.submod_log.info("[DMR_C] Not installed submod 'Auto Outfit Change', change clothes/hair fail")
+            mas_submod_utils.submod_log.error("[DMR_C] Not installed submod 'Auto Outfit Change', change clothes/hair fail")
             return False
 
     def dmr_wearClotheswithAOC(_group="date"):
@@ -97,7 +97,7 @@ init 995 python:
             store.ahc_utils.changeClothesOfExprop(_group, chance=False)
             return True
         else:
-            mas_submod_utils.submod_log.info("[DMR_C] Not installed submod 'Auto Outfit Change', change clothes fail")
+            mas_submod_utils.submod_log.error("[DMR_C] Not installed submod 'Auto Outfit Change', change clothes fail")
             return False
 
 init -5 python:
@@ -115,7 +115,7 @@ init -5 python:
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] > DMR_MAX_AFF:
-                    mas_submod_utils.submod_log.info("[DMR_C] '{}' increased {} aff, but reached the maximum value".format(id, aff))
+                    mas_submod_utils.submod_log.warning("[DMR_C] '{}' increased {} aff, but reached the maximum value".format(id, aff))
                 else:
                     data['GetAff'] += aff
                     mas_gainAffection(aff, bypass = True)
@@ -138,7 +138,7 @@ init -5 python:
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] < DMR_MIN_AFF:
-                    mas_submod_utils.submod_log.info("[DMR_C] '{}' decreased '{}' aff, but reached the minimum value".format(id, aff))
+                    mas_submod_utils.submod_log.warning("[DMR_C] '{}' decreased '{}' aff, but reached the minimum value".format(id, aff))
                 else:
                     data['GetAff'] -= aff
                     mas_loseAffection(aff)

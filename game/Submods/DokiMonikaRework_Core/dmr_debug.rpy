@@ -36,7 +36,7 @@ init 5 python:
 
 label dmr_testDateTopic:
     $ dmr_loadDateInfo('dmr_testDoki')
-    call dmr_datemain.
+    call dmr_datemain
     return
 
 label dmr_raiseError:
