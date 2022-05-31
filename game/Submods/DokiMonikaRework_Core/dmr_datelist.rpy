@@ -65,8 +65,8 @@ init 995 python:
         注意 AOC切换为随机切换 有极低概率不切换
         执行失败返回False, 否则返回True
         IN:
-            group - 衣服的种类 默认为date
-            _hairgroup - 头发类型 默认为day
+            group - 衣服的种类 默认为date 可用 - home/date/formal/sweater/jacket/pajamas
+            _hairgroup - 头发类型 默认为day 可用 - day/night/down
         RETURN:
             执行结果T/F
         """
@@ -101,6 +101,21 @@ init 995 python:
             return False
 
 init -5 python:
+    def dmr_checkDDLCFanmodSaveDir(game):
+        """
+        检测指定Renpy游戏存档文件夹是否存在
+        可以用来检查玩家是否玩过某个DDLC粉丝mod
+        IN:
+            game - 存档文件夹名称
+        RETURN:
+            bool
+        """
+        import os
+        appdata = os.getenv('APPDATA')
+        saveDir = appdata + "/RenPy/" + game
+
+        return os.path.exists(saveDir)
+
 
     def dmr_gainAff(aff = 3, id = store.dmr_global.Id):
         """
