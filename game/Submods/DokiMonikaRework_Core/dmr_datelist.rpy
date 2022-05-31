@@ -117,7 +117,7 @@ init -5 python:
         return os.path.exists(saveDir)
 
 
-    def dmr_gainAff(aff = 3, id = store.dmr_global.Id):
+    def dmr_gainAff(aff = 3, id = None):
         """
         增加好感, 上限为10, 累计上限为120
         var:
@@ -126,7 +126,8 @@ init -5 python:
         """
         if aff > 10:
             aff = 10
-        
+        if id == None:
+            id = dmr_global.Id
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] > DMR_MAX_AFF:
@@ -140,7 +141,7 @@ init -5 python:
                 continue
         raise DateSubmodException('Unable find dateid - 未找到约会数据id\n -> {}'.format(id))
         
-    def dmr_loseAff(aff = 3, id = store.dmr_global.Id):
+    def dmr_loseAff(aff = 3, id = None):
         """
         降低好感, 上限为-10, 累计上限为-120
         var:
@@ -149,7 +150,8 @@ init -5 python:
         """
         if aff > 10:
             aff = 10
-        
+        if id == None:
+            id = dmr_global.Id
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] < DMR_MIN_AFF:
