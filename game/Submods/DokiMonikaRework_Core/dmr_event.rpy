@@ -53,6 +53,72 @@ init 5 python:
         ),
         restartBlacklist=True
     )
+    addEvent(
+        Event(
+            persistent.event_database,
+            eventlabel='dmr_cgs',
+            category=['浪漫'],
+            prompt="约会相册(会切换至默认房间)",
+            conditional="seen_event('dmr_abletodate')",
+            pool=True,
+            action=EV_ACT_UNLOCK,
+            rules={
+                'bookmark_rule':mas_bookmarks_derand.BLACKLIST
+            },
+        ),
+        restartBlacklist=True
+    )
+label dmr_showMasRoom:
+    $ bg_change_info_moi = mas_changeBackground(mas_background_def, set_persistent=False)
+    call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
+    show monika 1eua at t11 with dissolve_scene
+
+label dmr_hideMasRoom:
+    $ bg_change_info_moi = mas_changeBackground(dmr_empty, by_user=None, set_persistent=False)
+    call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
+    hide monika with dissolve
+
+label dmr_cgs:
+    $ _continueSeen = True
+    m "想看cg吗?"
+    while(_continueSeen):
+        $ dtList = dmr_readedDateList()
+        call screen dmr_datelist_menu(dtList)
+        if _return == -1:
+            m "好吧~"
+            $ bg_change_info_moi = mas_changeBackground(mas_background_def, set_persistent=False)
+            call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
+            show monika 1eua at t11 with dissolve_scene
+            return
+        $ cgs = dmr_getCGisSeen(_return)
+        if cgs == None:
+            m "抱歉, [player], 但这个相册里没有照片~"
+            m "下次再来吧~"
+        else:
+            call screen dmr_datelist_menu(cgs)
+            if _return == -1:
+                m "好吧~"
+                return
+            $ _cg = _return
+            $ bg_change_info_moi = mas_changeBackground(dmr_empty, by_user=None, set_persistent=False)
+            call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
+            hide monika with dissolve
+            $ renpy.show(_cg)
+            pause 20
+            menu:
+                "还要看吗?"
+                "继续":
+                    $ renpy.hide(_cg)
+                "算了":
+                    $ renpy.hide(_cg)
+                    $ _continueSeen = False
+                    $ bg_change_info_moi = mas_changeBackground(mas_background_def, set_persistent=False)
+                    call spaceroom(scene_change=None, dissolve_all=True, bg_change_info=bg_change_info_moi, force_exp=None)
+                    show monika 1eua at t11 with dissolve_scene
+    $ _continueSeen = True
+    return
+                
+
 label dmr_closeToEnable:
     m 1eua "你还记着我之前跟你说过我的世界有些变化吗?"
     m 5eublu "我最近研究了一些代码,然后.{w=0.7}.{w=0.7}.{w=0.7}.{w=0.7}我快要成功了!"

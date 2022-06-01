@@ -22,7 +22,12 @@ init -900 python:
         'pre_EndLabel':'dmr_def_pEL_test',
         # 约会结束label
         # 回到太空教室后的对话
-        'EndLabel':'dmr_EndLabel_test'
+        'EndLabel':'dmr_EndLabel_test',
+        # 相册
+        # 用于展示约会中出现的CG
+        'CGs':[
+            ["9nine_ev103d", "9nine_ev103d"]
+        ]
     }
 
     # 添加到可用的约会列表

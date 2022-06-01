@@ -17,6 +17,9 @@ init -999 python:
 
 init 900 python:
     dmr_initData()
+    mas_setEVLPropValues('dmr_startdate', pool=True)
+    if seen_event('dmr_abletodate'):
+        mas_showEVL('dmr_cgs', 'EVE', unlock=True, _pool=True)
 
 init -2 python in mas_sprites:
     import store
@@ -101,6 +104,32 @@ init 995 python:
             return False
 
 init -5 python:
+    def dmr_getCGisSeen(id):
+        """
+        获取指定id目前能看的CG列表
+        IN:
+            id - 约会Id
+        Return:
+            已经看过的CG list/如果为空则为None
+        """
+        cg = list()
+        for date in dmr_DateList:
+            if date['Id'] == id:
+                try:
+                    cgs = date['CGs']
+                    for img in cgs:
+                        if renpy.seen_image(img[0]):
+                            cg.append(img)
+                except KeyError:
+                    mas_submod_utils.submod_log.warning("[DMR_C] '{}' not registed CGs.".format(id))
+                break
+        if cg == []:
+            cg = None
+            mas_submod_utils.submod_log.warning("[DMR_C] '{}' not registed CGs.".format(id))
+        return cg
+
+
+
     def dmr_checkDDLCFanmodSaveDir(game):
         """
         检测指定Renpy游戏存档文件夹是否存在
@@ -155,11 +184,11 @@ init -5 python:
         for data in dmr_DateData:
             if data['Id'] == id:
                 if data['GetAff'] < DMR_MIN_AFF:
-                    mas_submod_utils.submod_log.warning("[DMR_C] '{}' decreased '{}' aff, but reached the minimum value".format(id, aff))
+                    mas_submod_utils.submod_log.warning("[DMR_C] '{}' decreased {} aff, but reached the minimum value".format(id, aff))
                 else:
                     data['GetAff'] -= aff
                     mas_loseAffection(aff)
-                    mas_submod_utils.submod_log.info("[DMR_C] '{}' decreased '{}' aff".format(id, aff))
+                    mas_submod_utils.submod_log.info("[DMR_C] '{}' decreased {} aff".format(id, aff))
                 return True
             else:
                 continue

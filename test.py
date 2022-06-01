@@ -12,6 +12,8 @@ c = {
 
 a.append(b)
 a.append(c)
-
-print(bool(None))
+try:
+    print(c['J'])
+except KeyError:
+    print('None')
     
