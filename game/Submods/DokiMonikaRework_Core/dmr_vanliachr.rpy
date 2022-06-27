@@ -1,4 +1,4 @@
-define mv = DynamicCharacter('m_name', image='monika_vanlia', what_prefix='"', what_suffix='"', ctc="ctc", ctc_position="fixed")
+define mv = DynamicCharacter(m_name, image='monika_vanlia', what_prefix='"', what_suffix='"', ctc="ctc", ctc_position="fixed")
 
 # Monika's Definitions
 image monika_vanlia 1 = im.Composite((960, 960), (0, 0), "monika/1l.png", (0, 0), "monika/1r.png", (0, 0), "monika/a.png")
