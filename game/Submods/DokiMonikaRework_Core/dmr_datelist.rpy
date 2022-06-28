@@ -196,6 +196,24 @@ init -5 python:
         
 init -990 python:
 
+    def dmr_regNewDate(dateinfo):
+        """
+        注册一个新约会
+        """
+        if dateinfo['Id'] ==  None or dateinfo['Name'] == None or dateinfo['Conditional'] == None or dateinfo['pre_StartLabel'] or dateinfo['StartLabel'] or dateinfo['pre_EndLabel'] == None or dateinfo['EndLabel'] == None or dateinfo['CGs'] == None:
+            raise DateSubmodException('Not legal datedata format - 约会数据创建不合法\n -> {}'.format(dateinfo))
+        for d in dmr_DateList:
+            if dateinfo['Id'] == d['Id']:
+                raise DateSubmodException('Duplicate date ID - 重复的约会ID\n -> {}'.format(dateinfo['Id']))
+        dmr_DateList.append(dateinfo)
+        for datedata in dmr_DateData:
+            existdata = False
+            if datedata['Id'] == dateinfo['Id']:
+                existdata = True
+            if not existdata:
+                dmr_createData(dateinfo['Id'])
+        #   raise DateSubmodException('Not legal datedata format- 约会数据创建不合法\n -> {}'.format(dateinfo))
+
     def dmr_resetDateData():
         """
         重置所有约会数据
